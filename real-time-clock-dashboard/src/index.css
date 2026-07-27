@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Custom scrollbar and smooth transition tweaks */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom smooth pulsing and transitions for the clock elements */
+* {
+  box-sizing: border-box;
+}
