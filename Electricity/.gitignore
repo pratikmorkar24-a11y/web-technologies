@@ -1,0 +1,34 @@
+# Compiled Java files
+*.class
+
+# Logs
+*.log
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# Build folders
+bin/
+build/
+target/
+out/
+
+# Maven
+target/
+
+# Gradle
+.gradle/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
