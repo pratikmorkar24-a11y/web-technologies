@@ -23,6 +23,15 @@
 
 <div class="card-body">
 
+<div class="alert alert-light border mb-4">
+<div class="row g-2 small">
+<div class="col-md"><strong>Name:</strong> Pratik Morkar</div>
+<div class="col-md"><strong>Class:</strong> TY-CS-H</div>
+<div class="col-md"><strong>PRN:</strong> 12410961</div>
+<div class="col-md"><strong>Roll No:</strong> 19</div>
+</div>
+</div>
+
 <table class="table table-bordered">
 
 <tr>
