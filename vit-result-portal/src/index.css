@@ -63,6 +63,58 @@ body {
   text-decoration: underline;
 }
 
+/* Student details */
+
+.student-details {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.student-details-container {
+  width: 90%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.student-details h2 {
+  color: #8b0000;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.student-details-container div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.student-details span {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.student-details strong {
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .student-details-container {
+    flex-wrap: wrap;
+    gap: 14px 24px;
+  }
+
+  .student-details h2 {
+    width: 100%;
+  }
+}
+
 /* Page */
 
 .page-container {
