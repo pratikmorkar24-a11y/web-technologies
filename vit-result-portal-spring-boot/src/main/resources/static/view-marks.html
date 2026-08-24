@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Marks - VIT Result Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <img src="/images/vit-logo.png" alt="VIT Pune logo">
+        <div><h1>VIT Result Portal</h1><p>Marks Management</p></div>
+    </div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/add-student.html">Add Student</a>
+        <a href="/add-marks.html">Add Marks</a>
+        <a href="/view-marks.html">View Marks</a>
+
+        <div class="student-details">
+            <strong>Pratik Morkar</strong>
+            <span>TY-CS-H · Roll No: 19</span>
+            <span>PRN: 12410961</span>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-heading">
+        <span class="eyebrow">MARKS MANAGEMENT</span>
+        <h2>View Marks</h2>
+        <p>Search marks using a student's PRN.</p>
+    </div>
+
+    <form id="searchForm" class="search-bar result-search">
+        <input
+            id="prn"
+            type="text"
+            placeholder="Enter PRN"
+            required
+            maxlength="30"
+        >
+
+        <input
+            id="motherName"
+            type="text"
+            placeholder="Mother's name"
+            required
+            maxlength="100"
+        >
+
+        <button class="btn primary" type="submit">
+            Verify & View Marks
+        </button>
+    </form>
+
+    <div id="message" class="message"></div>
+    <section id="studentInfo" class="student-summary hidden"></section>
+    <section id="tableWrap" class="table-card hidden">
+        <div class="table-scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th>Subject</th><th>MSE /100</th><th>MSE 30%</th>
+                    <th>ESE /100</th><th>ESE 70%</th><th>Total /100</th>
+                </tr>
+                </thead>
+                <tbody id="marksBody"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer>Vishwakarma Institute of Technology, Pune · Result Portal</footer>
+<script src="/js/view-marks.js"></script>
+</body>
+</html>

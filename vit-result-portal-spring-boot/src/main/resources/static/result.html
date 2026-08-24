@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semester Result - VIT Result Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <img src="/images/vit-logo.png" alt="VIT Pune logo">
+        <div><h1>VIT Result Portal</h1><p>Semester Result</p></div>
+    </div>
+    <nav>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/add-student.html">Add Student</a>
+        <a href="/add-marks.html">Add Marks</a>
+        <a href="/view-marks.html">View Marks</a>
+
+        <div class="student-details">
+            <strong>Pratik Morkar</strong>
+            <span>TY-CS-H · Roll No: 19</span>
+            <span>PRN: 12410961</span>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-heading">
+        <span class="eyebrow">STUDENT RESULT</span>
+        <h2>Check Semester Result</h2>
+        <p>Enter your PRN and mother's name to retrieve the result.</p>
+    </div>
+
+    <form id="resultForm" class="search-bar result-search">
+        <input id="prn" type="text" placeholder="PRN" required maxlength="30">
+        <input id="motherName" type="text" placeholder="Mother's name" required maxlength="100">
+        <button class="btn primary" type="submit">View Result</button>
+    </form>
+
+    <div id="message" class="message"></div>
+    <section id="result" class="hidden"></section>
+</main>
+
+<footer>Vishwakarma Institute of Technology, Pune · Result Portal</footer>
+<script src="/js/result.js"></script>
+</body>
+</html>
