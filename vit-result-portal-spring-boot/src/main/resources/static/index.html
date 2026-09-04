@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIT Result Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <img src="/images/vit-logo.png" alt="VIT Pune logo">
+        <div>
+            <h1>VIT Result Portal</h1>
+            <p>Semester Result Management System</p>
+        </div>
+    </div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/add-student.html">Add Student</a>
+        <a href="/add-marks.html">Add Marks</a>
+        <a href="/view-marks.html">View Marks</a>
+
+        <div class="student-details">
+            <strong>Pratik Morkar</strong>
+            <span>TY-CS-H · Roll No: 19</span>
+            <span>PRN: 12410961</span>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div>
+            <span class="eyebrow">VIT PUNE</span>
+            <h2>Semester Result Portal</h2>
+            <p>Prepare and view semester results using MSE (30%) and ESE (70%) marks.</p>
+            <a class="btn primary" href="/result.html">Check Result</a>
+        </div>
+        <div class="hero-card">
+            <div class="hero-icon">30%</div>
+            <span>MSE Weight</span>
+            <div class="hero-icon">70%</div>
+            <span>ESE Weight</span>
+        </div>
+    </section>
+
+    <section class="cards">
+        <a class="card" href="/add-student.html">
+            <span class="card-icon">+</span>
+            <h3>Add Student</h3>
+            <p>Register a student using PRN, name, mother's name, branch and semester.</p>
+        </a>
+        <a class="card" href="/add-marks.html">
+            <span class="card-icon">▣</span>
+            <h3>Add Marks</h3>
+            <p>Add marks for four subjects and automatically calculate weighted marks.</p>
+        </a>
+        <a class="card" href="/view-marks.html">
+            <span class="card-icon">◫</span>
+            <h3>View Marks</h3>
+            <p>Search and view the marks entered for a particular student.</p>
+        </a>
+        <a class="card" href="/result.html">
+            <span class="card-icon">✓</span>
+            <h3>View Result</h3>
+            <p>Enter PRN and mother's name to securely retrieve the semester result.</p>
+        </a>
+    </section>
+
+    <section class="info-panel">
+        <h3>Calculation</h3>
+        <div class="formula-grid">
+            <div><strong>MSE Contribution</strong><span>MSE × 0.30</span></div>
+            <div><strong>ESE Contribution</strong><span>ESE × 0.70</span></div>
+            <div><strong>Subject Total</strong><span>MSE Contribution + ESE Contribution</span></div>
+        </div>
+    </section>
+</main>
+
+<footer>Vishwakarma Institute of Technology, Pune · Result Portal</footer>
+</body>
+</html>

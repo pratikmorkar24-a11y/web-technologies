@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Marks - VIT Result Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <img src="/images/vit-logo.png" alt="VIT Pune logo">
+        <div><h1>VIT Result Portal</h1><p>Marks Management</p></div>
+    </div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/add-student.html">Add Student</a>
+        <a href="/add-marks.html">Add Marks</a>
+        <a href="/view-marks.html">View Marks</a>
+
+        <div class="student-details">
+            <strong>Pratik Morkar</strong>
+            <span>TY-CS-H · Roll No: 19</span>
+            <span>PRN: 12410961</span>
+        </div>
+    </nav>
+</header>
+
+<main class="container narrow">
+    <div class="page-heading">
+        <span class="eyebrow">MARKS MANAGEMENT</span>
+        <h2>Add Subject Marks</h2>
+        <p>MSE and ESE are entered out of 100 and converted automatically to 30% and 70%.</p>
+    </div>
+
+    <form id="marksForm" class="form-card" novalidate>
+        <div class="form-grid">
+            <label>Student PRN
+                <input id="prn" type="text" placeholder="Enter registered PRN" required maxlength="30">
+            </label>
+            <label>Subject Name
+                <input id="subjectName" type="text" placeholder="e.g. Data Structures" required maxlength="100">
+            </label>
+            <label>MSE Marks <span class="muted">(/100)</span>
+                <input id="mseMarks" type="number" min="0" max="100" step="0.01" placeholder="0 - 100" required>
+            </label>
+            <label>ESE Marks <span class="muted">(/100)</span>
+                <input id="eseMarks" type="number" min="0" max="100" step="0.01" placeholder="0 - 100" required>
+            </label>
+        </div>
+
+        <div class="calculation-preview">
+            <div><span>MSE contribution</span><strong id="mseWeighted">0.00</strong></div>
+            <div><span>ESE contribution</span><strong id="eseWeighted">0.00</strong></div>
+            <div><span>Subject total</span><strong id="totalMarks">0.00 / 100</strong></div>
+        </div>
+
+        <div id="message" class="message"></div>
+        <button class="btn primary" type="submit">Save Marks</button>
+    </form>
+</main>
+
+<footer>Vishwakarma Institute of Technology, Pune · Result Portal</footer>
+<script src="/js/add-marks.js"></script>
+</body>
+</html>

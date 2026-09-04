@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student - VIT Result Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <img src="/images/vit-logo.png" alt="VIT Pune logo">
+        <div><h1>VIT Result Portal</h1><p>Student Management</p></div>
+    </div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/add-student.html">Add Student</a>
+        <a href="/add-marks.html">Add Marks</a>
+        <a href="/view-marks.html">View Marks</a>
+
+        <div class="student-details">
+            <strong>Pratik Morkar</strong>
+            <span>TY-CS-H · Roll No: 19</span>
+            <span>PRN: 12410961</span>
+        </div>
+    </nav>
+</header>
+
+<main class="container narrow">
+    <div class="page-heading">
+        <span class="eyebrow">STUDENT MANAGEMENT</span>
+        <h2>Add Student</h2>
+        <p>Enter the student's details before entering marks.</p>
+    </div>
+
+    <form id="studentForm" class="form-card" novalidate>
+        <div class="form-grid">
+            <label>PRN
+                <input id="prn" name="prn" type="text" placeholder="e.g. 1234567890" required maxlength="30">
+                <small>Letters and numbers only.</small>
+            </label>
+            <label>Student Name
+                <input id="name" name="name" type="text" placeholder="Full name" required maxlength="100">
+            </label>
+            <label>Mother's Name
+                <input id="motherName" name="motherName" type="text" placeholder="Mother's full name" required maxlength="100">
+            </label>
+            <label>Branch
+                <input id="branch" name="branch" type="text" placeholder="e.g. Computer Engineering" required maxlength="100">
+            </label>
+            <label>Semester
+                <select id="semester" name="semester" required>
+                    <option value="">Select semester</option>
+                    <option>Semester 1</option><option>Semester 2</option>
+                    <option>Semester 3</option><option>Semester 4</option>
+                    <option>Semester 5</option><option>Semester 6</option>
+                    <option>Semester 7</option><option>Semester 8</option>
+                </select>
+            </label>
+        </div>
+        <div id="message" class="message"></div>
+        <button class="btn primary" type="submit">Save Student</button>
+    </form>
+</main>
+
+<footer>Vishwakarma Institute of Technology, Pune · Result Portal</footer>
+<script src="/js/add-student.js"></script>
+</body>
+</html>
