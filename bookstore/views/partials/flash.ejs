@@ -1,0 +1,10 @@
+<% if ((successMsg && successMsg.length) || (errorMsg && errorMsg.length)) { %>
+<div class="flash-stack" id="flashStack">
+  <% successMsg.forEach(function(msg) { %>
+    <div class="flash flash-success">✅ <%= msg %></div>
+  <% }); %>
+  <% errorMsg.forEach(function(msg) { %>
+    <div class="flash flash-error">⚠️ <%= msg %></div>
+  <% }); %>
+</div>
+<% } %>

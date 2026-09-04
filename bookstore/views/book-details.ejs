@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<%
+  const stock = book.stock_quantity;
+  let stockClass = 'in', stockLabel = 'In Stock';
+  if (stock <= 0) { stockClass = 'out'; stockLabel = 'Out of Stock'; }
+  else if (stock <= 5) { stockClass = 'low'; stockLabel = `Only ${stock} left in stock`; }
+  else { stockLabel = `${stock} copies in stock`; }
+%>
+
+<div class="container book-details">
+  <p class="breadcrumb"><a href="/">Home</a> / <a href="/catalogue">Catalogue</a> / <%= book.title %></p>
+
+  <div class="details-grid">
+    <div class="details-cover">
+      <div class="cover-frame">
+        <img src="<%= book.cover_image %>" alt="Cover of <%= book.title %>">
+      </div>
+    </div>
+
+    <div>
+      <div class="details-genres">
+        <% book.genres.forEach(function(g){ %><span><%= g.name %></span><% }) %>
+      </div>
+      <h1><%= book.title %></h1>
+      <div class="details-meta-row">
+        <span>by <b style="color:var(--text-primary);"><%= book.authors.map(a => a.name).join(', ') %></b></span>
+        <span class="rating-badge">★ <%= Number(book.rating).toFixed(1) %></span>
+        <span class="stock-pill <%= stockClass %>"><%= stockLabel %></span>
+      </div>
+
+      <div class="details-price-row">
+        <span class="details-price">₹<%= Number(book.price).toFixed(2) %></span>
+
+        <div data-qty-scope>
+          <div class="qty-selector">
+            <button type="button" data-qty-step="-1">−</button>
+            <input type="text" value="1" data-qty-input data-max="<%= stock %>" readonly>
+            <button type="button" data-qty-step="1">+</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" data-add-to-cart="<%= book.id %>" data-stock="<%= stock %>" <%= stock <= 0 ? 'disabled' : '' %>>
+          <%= stock <= 0 ? 'Out of Stock' : '🛍️ Add to Cart' %>
+        </button>
+      </div>
+
+      <div class="details-actions">
+        <a href="/cart" class="btn btn-ghost btn-sm">View Cart →</a>
+        <a href="/catalogue" class="btn btn-ghost btn-sm">← Back to Catalogue</a>
+      </div>
+
+      <div class="description-block">
+        <h3>About this book</h3>
+        <p><%= book.description %></p>
+      </div>
+
+      <div class="info-table">
+        <div><span>Publisher</span><b><%= book.publisher || '—' %></b></div>
+        <div><span>Publication Year</span><b><%= book.publication_year || '—' %></b></div>
+        <div><span>Pages</span><b><%= book.pages || '—' %></b></div>
+        <div><span>Language</span><b><%= book.language %></b></div>
+        <div><span>ISBN</span><b><%= book.isbn || '—' %></b></div>
+        <div><span>Genres</span><b><%= book.genres.map(g => g.name).join(', ') %></b></div>
+      </div>
+    </div>
+  </div>
+
+  <% if (related.length) { %>
+    <section style="margin-top:80px;">
+      <div class="section-head reveal is-visible">
+        <div><span class="tag">You Might Also Like</span><h2>More from this shelf</h2></div>
+      </div>
+      <div class="book-grid">
+        <% related.forEach(function(b){ %>
+          <%- include('partials/book-card', { book: b }) %>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

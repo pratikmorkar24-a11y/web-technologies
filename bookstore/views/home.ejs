@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="orbit-ring r1"></div>
+  <div class="orbit-ring r2"></div>
+  <div class="container hero-grid">
+    <div>
+      <span class="hero-eyebrow">✦ The Digital Library Reimagined</span>
+      <h1>Where every <span class="grad">story</span><br>finds its <span class="grad-2">reader.</span></h1>
+      <p class="lead">Inkwell curates timeless classics and modern favorites into one beautifully organized shelf — browse, discover, and check out in seconds.</p>
+      <div class="hero-ctas">
+        <a href="/catalogue" class="btn btn-primary">Explore the Catalogue →</a>
+        <a href="#featured" class="btn btn-ghost">See What's Featured</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>2,000+</b><span>Titles curated</span></div>
+        <div class="stat"><b>12</b><span>Genres to explore</span></div>
+        <div class="stat"><b>4.6★</b><span>Avg. reader rating</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img class="floating-book b1" src="/images/covers/1984.svg" alt="">
+      <img class="floating-book b2" src="/images/covers/pride-and-prejudice.svg" alt="">
+      <img class="floating-book b3" src="/images/covers/dracula.svg" alt="">
+      <img class="floating-book b4" src="/images/covers/great-gatsby.svg" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURED ================= -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="tag">Curator's Picks</span>
+        <h2>Featured on the shelf</h2>
+      </div>
+      <a href="/catalogue" class="btn btn-outline btn-sm">View all →</a>
+    </div>
+    <div class="scroll-strip reveal">
+      <% featured.forEach(function(book){ %>
+        <%- include('partials/book-card', { book }) %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GENRES ================= -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="tag">Wander the Shelves</span>
+        <h2>Shop by genre</h2>
+      </div>
+    </div>
+    <div class="genre-chip-row reveal">
+      <% genres.forEach(function(g){ %>
+        <a href="/catalogue?genre=<%= g.id %>" class="genre-chip"><%= g.name %></a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NEW ARRIVALS ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="tag">Fresh Ink</span>
+        <h2>New arrivals this season</h2>
+        <p>Recently added titles, fresh off the (digital) press.</p>
+      </div>
+      <a href="/catalogue?sort=newest" class="btn btn-outline btn-sm">Browse new →</a>
+    </div>
+    <div class="book-grid reveal">
+      <% newArrivals.forEach(function(book){ %>
+        <%- include('partials/book-card', { book }) %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <h2>Your next favorite book is one click away.</h2>
+      <p style="max-width:520px;margin:14px auto 28px;">Create a free account to track orders, save favorites, and check out faster.</p>
+      <a href="/register" class="btn btn-accent">Create your account</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

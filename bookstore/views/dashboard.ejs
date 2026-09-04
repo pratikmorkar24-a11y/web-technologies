@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<div class="container dashboard-wrap">
+  <div class="dashboard-header">
+    <div>
+      <h1>Welcome, <%= user.full_name.split(' ')[0] %> 👋</h1>
+      <p>Here's a look at your Inkwell account.</p>
+    </div>
+    <a href="/catalogue" class="btn btn-primary">Continue Browsing</a>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="num"><%= orders.length %></div>
+      <div class="label">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">₹<%= orders.reduce((s,o) => s + Number(o.total_amount), 0).toFixed(2) %></div>
+      <div class="label">Total Spent</div>
+    </div>
+    <div class="stat-card">
+      <div class="num"><%= orders.reduce((s,o) => s + o.items.reduce((a,i) => a + i.quantity, 0), 0) %></div>
+      <div class="label">Books Purchased</div>
+    </div>
+  </div>
+
+  <h2 style="margin-bottom:24px;">Order History</h2>
+
+  <% if (!orders.length) { %>
+    <div class="empty-state">
+      <div class="icon">📦</div>
+      <h3>No orders yet</h3>
+      <p>Your order history will show up here once you check out.</p>
+      <a href="/catalogue" class="btn btn-primary" style="margin-top:16px;">Start Shopping</a>
+    </div>
+  <% } else { %>
+    <% orders.forEach(function(order){ %>
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <b>Order #<%= order.id %></b>
+            <span style="color:var(--text-muted); font-size:0.85rem; margin-left:10px;">
+              <%= new Date(order.order_date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+            </span>
+          </div>
+          <span class="order-status <%= order.status %>"><%= order.status %></span>
+        </div>
+        <% order.items.forEach(function(item){ %>
+          <div class="order-item-row">
+            <img src="<%= item.cover_image %>" alt="">
+            <span class="name"><%= item.title %></span>
+            <span class="qty">₹<%= Number(item.unit_price).toFixed(2) %> × <%= item.quantity %></span>
+          </div>
+        <% }) %>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:16px; border-top:1px solid var(--border-soft);">
+          <span style="color:var(--text-muted); font-size:0.85rem;"><%= order.shipping_address %></span>
+          <b style="color:var(--amber-300); font-family:var(--font-serif); font-size:1.15rem;">₹<%= Number(order.total_amount).toFixed(2) %></b>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

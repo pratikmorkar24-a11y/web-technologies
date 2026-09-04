@@ -1,0 +1,26 @@
+<%
+  const stock = book.stock_quantity;
+  let stockClass = 'in', stockLabel = 'In Stock';
+  if (stock <= 0) { stockClass = 'out'; stockLabel = 'Out of Stock'; }
+  else if (stock <= 5) { stockClass = 'low'; stockLabel = `Only ${stock} left`; }
+  else { stockLabel = `${stock} in stock`; }
+%>
+<article class="book-card">
+  <a href="/books/<%= book.id %>" class="cover-link" aria-label="View <%= book.title %>"></a>
+  <div class="cover-wrap">
+    <img src="<%= book.cover_image %>" alt="Cover of <%= book.title %>" loading="lazy">
+    <span class="stock-pill <%= stockClass %>"><%= stockLabel %></span>
+  </div>
+  <div class="info">
+    <% if (book.genres) { %><span class="genre-tag"><%= book.genres.split(',')[0] %></span><% } %>
+    <h3><%= book.title %></h3>
+    <% if (book.authors) { %><div class="author">by <%= book.authors %></div><% } %>
+    <span class="rating-badge">★ <%= Number(book.rating).toFixed(1) %></span>
+    <div class="price-row">
+      <span class="price">₹<%= Number(book.price).toFixed(2) %></span>
+      <button class="add-btn" data-add-to-cart="<%= book.id %>" data-stock="<%= stock %>" <%= stock <= 0 ? 'disabled' : '' %> title="Add to cart">
+        <%= stock <= 0 ? '✕' : '+' %>
+      </button>
+    </div>
+  </div>
+</article>

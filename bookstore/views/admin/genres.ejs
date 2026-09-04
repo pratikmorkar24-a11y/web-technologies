@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/flash') %>
+<%- include('../partials/header') %>
+
+<div class="container admin-wrap">
+  <div class="dashboard-header">
+    <div>
+      <h1>Manage Genres</h1>
+      <p>Add new genres or view existing book categories.</p>
+    </div>
+  </div>
+
+  <%- include('../partials/admin-tabs') %>
+
+  <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start;">
+    <!-- Add Genre Form Card -->
+    <div class="admin-form-card" style="padding: 24px;">
+      <h3 style="margin-bottom: 16px;">Add New Genre</h3>
+      <form action="/admin/genres/new" method="POST">
+        <div class="form-group">
+          <label>Genre Name <span style="color:var(--cyan-400);">*</span></label>
+          <input type="text" name="name" placeholder="e.g. Science Fiction" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" rows="4" placeholder="Brief description of this genre category..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 16px;">+ Add Genre</button>
+      </form>
+    </div>
+
+    <!-- Genres List Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Genre Name</th>
+            <th>Description</th>
+            <th>Books Count</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (genres.length === 0) { %>
+            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No genres found.</td></tr>
+          <% } %>
+          <% genres.forEach(function(g){ %>
+            <tr>
+              <td style="font-weight:600;"><%= g.name %></td>
+              <td style="max-width:320px; font-size:0.88rem; color:var(--text-muted);">
+                <%= g.description ? (g.description.length > 90 ? g.description.substring(0, 90) + '…' : g.description) : '—' %>
+              </td>
+              <td><span class="badge" style="background:var(--navy-700); padding:4px 10px; border-radius:12px; font-size:0.85rem;"><%= g.book_count || 0 %> books</span></td>
+              <td>
+                <form action="/admin/genres/<%= g.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Remove genre &quot;<%= g.name %>&quot;?');">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

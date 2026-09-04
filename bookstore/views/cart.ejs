@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="page-hero-simple">
+    <h1>Your Cart</h1>
+    <p>Review your picks before you check out.</p>
+  </div>
+</div>
+
+<div class="container cart-layout">
+  <div>
+    <div id="cartEmpty" class="empty-state" style="display:none;">
+      <div class="icon">🛍️</div>
+      <h3>Your cart is empty</h3>
+      <p>Looks like you haven't added anything yet.</p>
+      <a href="/catalogue" class="btn btn-primary" style="margin-top:16px;">Browse the Catalogue</a>
+    </div>
+    <div id="cartList"></div>
+  </div>
+
+  <div id="cartSummary" class="summary-card" style="display:none;">
+    <h3 style="margin-bottom:20px;">Order Summary</h3>
+    <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0.00</span></div>
+    <div class="summary-row"><span>Shipping</span><span id="sumShipping">₹0.00</span></div>
+    <div class="summary-row total"><span>Total</span><span class="amt" id="sumTotal">₹0.00</span></div>
+    <% if (user) { %>
+      <a href="/checkout" class="btn btn-primary btn-block" style="margin-top:20px;">Proceed to Checkout →</a>
+    <% } else { %>
+      <a href="/login" class="btn btn-primary btn-block" style="margin-top:20px;">Log in to Checkout →</a>
+      <p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-top:10px;">You'll need an account to place an order.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/cart-page.js"></script>
+</body>
+</html>

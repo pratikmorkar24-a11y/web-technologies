@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/flash') %>
+<%- include('../partials/header') %>
+
+<div class="container admin-wrap">
+  <div class="dashboard-header">
+    <div>
+      <h1>Manage Authors</h1>
+      <p>Add new authors or view existing catalogue authors.</p>
+    </div>
+  </div>
+
+  <%- include('../partials/admin-tabs') %>
+
+  <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start;">
+    <!-- Add Author Form Card -->
+    <div class="admin-form-card" style="padding: 24px;">
+      <h3 style="margin-bottom: 16px;">Add New Author</h3>
+      <form action="/admin/authors/new" method="POST">
+        <div class="form-group">
+          <label>Author Name <span style="color:var(--cyan-400);">*</span></label>
+          <input type="text" name="name" placeholder="e.g. J.K. Rowling" required>
+        </div>
+        <div class="form-group">
+          <label>Biography</label>
+          <textarea name="bio" rows="4" placeholder="Brief background info about the author..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 16px;">+ Add Author</button>
+      </form>
+    </div>
+
+    <!-- Authors List Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Author Name</th>
+            <th>Biography</th>
+            <th>Books Count</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (authors.length === 0) { %>
+            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No authors found.</td></tr>
+          <% } %>
+          <% authors.forEach(function(a){ %>
+            <tr>
+              <td style="font-weight:600;"><%= a.name %></td>
+              <td style="max-width:320px; font-size:0.88rem; color:var(--text-muted);">
+                <%= a.bio ? (a.bio.length > 90 ? a.bio.substring(0, 90) + '…' : a.bio) : '—' %>
+              </td>
+              <td><span class="badge" style="background:var(--navy-700); padding:4px 10px; border-radius:12px; font-size:0.85rem;"><%= a.book_count || 0 %> books</span></td>
+              <td>
+                <form action="/admin/authors/<%= a.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Remove author &quot;<%= a.name %>&quot;?');">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

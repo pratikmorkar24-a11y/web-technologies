@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<section class="catalogue-hero">
+  <div class="container">
+    <span class="hero-eyebrow">✦ The Full Collection</span>
+    <h1 style="margin-top:16px;">The Catalogue</h1>
+    <p style="max-width:560px;">A curated, editorial shelf of every title in the Inkwell library — browse by genre, search by title or author, and filter down to exactly what you're after.</p>
+  </div>
+</section>
+
+<div class="container catalogue-layout">
+
+  <!-- ============ FILTER SIDEBAR ============ -->
+  <aside class="filter-panel">
+    <form method="GET" action="/catalogue" id="filterForm">
+      <input type="hidden" name="sort" value="<%= filters.sort %>">
+
+      <div class="filter-group">
+        <h3>Genre</h3>
+        <label class="opt">
+          <input type="radio" name="genre" value="" <%= !filters.genre ? 'checked' : '' %> onchange="this.form.submit()">
+          All genres
+        </label>
+        <% genres.forEach(function(g){ %>
+          <label class="opt">
+            <input type="radio" name="genre" value="<%= g.id %>" <%= String(filters.genre) === String(g.id) ? 'checked' : '' %> onchange="this.form.submit()">
+            <%= g.name %>
+          </label>
+        <% }) %>
+      </div>
+
+      <div class="filter-group">
+        <h3>Author</h3>
+        <select name="author" onchange="this.form.submit()">
+          <option value="">All authors</option>
+          <% authors.forEach(function(a){ %>
+            <option value="<%= a.id %>" <%= String(filters.author) === String(a.id) ? 'selected' : '' %>><%= a.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <h3>Price range (₹)</h3>
+        <div class="price-inputs">
+          <input type="number" name="minPrice" placeholder="Min" value="<%= filters.minPrice %>" min="0">
+          <span style="color:var(--text-muted)">–</span>
+          <input type="number" name="maxPrice" placeholder="Max" value="<%= filters.maxPrice %>" min="0">
+        </div>
+        <button type="submit" class="btn btn-outline btn-sm" style="margin-top:6px;">Apply</button>
+      </div>
+
+      <div class="filter-group">
+        <label class="opt">
+          <input type="checkbox" name="inStockOnly" value="true" <%= filters.inStockOnly === 'true' ? 'checked' : '' %> onchange="this.form.submit()">
+          In stock only
+        </label>
+      </div>
+
+      <a href="/catalogue" class="btn btn-ghost btn-sm">Clear all filters</a>
+    </form>
+  </aside>
+
+  <!-- ============ RESULTS ============ -->
+  <div>
+    <div class="search-sort-bar">
+      <form method="GET" action="/catalogue" class="search-box" style="display:flex; flex:1;">
+        <input type="hidden" name="genre" value="<%= filters.genre %>">
+        <input type="hidden" name="author" value="<%= filters.author %>">
+        <input type="hidden" name="minPrice" value="<%= filters.minPrice %>">
+        <input type="hidden" name="maxPrice" value="<%= filters.maxPrice %>">
+        <input type="hidden" name="inStockOnly" value="<%= filters.inStockOnly %>">
+        <input type="hidden" name="sort" value="<%= filters.sort %>">
+        <input type="text" name="search" placeholder="Search by title, description, or author…" value="<%= filters.search %>">
+      </form>
+
+      <form method="GET" action="/catalogue">
+        <input type="hidden" name="genre" value="<%= filters.genre %>">
+        <input type="hidden" name="author" value="<%= filters.author %>">
+        <input type="hidden" name="minPrice" value="<%= filters.minPrice %>">
+        <input type="hidden" name="maxPrice" value="<%= filters.maxPrice %>">
+        <input type="hidden" name="inStockOnly" value="<%= filters.inStockOnly %>">
+        <input type="hidden" name="search" value="<%= filters.search %>">
+        <select name="sort" onchange="this.form.submit()">
+          <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest first</option>
+          <option value="price_asc" <%= filters.sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price_desc" <%= filters.sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="title_asc" <%= filters.sort === 'title_asc' ? 'selected' : '' %>>Title: A–Z</option>
+          <option value="title_desc" <%= filters.sort === 'title_desc' ? 'selected' : '' %>>Title: Z–A</option>
+          <option value="rating" <%= filters.sort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+          <option value="year_new" <%= filters.sort === 'year_new' ? 'selected' : '' %>>Publication Year: Newest</option>
+          <option value="year_old" <%= filters.sort === 'year_old' ? 'selected' : '' %>>Publication Year: Oldest</option>
+        </select>
+      </form>
+    </div>
+
+    <p class="results-meta"><%= pagination.total %> book<%= pagination.total === 1 ? '' : 's' %> found<% if (filters.search) { %> for "<%= filters.search %>"<% } %></p>
+
+    <% if (!books.length) { %>
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <h3>No books match those filters</h3>
+        <p>Try broadening your search or <a href="/catalogue" style="color:var(--cyan-400)">clearing all filters</a>.</p>
+      </div>
+    <% } else { %>
+      <%
+        // Editorial "shelf" grouping (curated bookshelf feel) only applies in the
+        // default browse view. If the user explicitly searched or chose a specific
+        // sort order, we respect that exact order instead of re-grouping by genre.
+        const isDefaultBrowse = filters.sort === 'newest' && !filters.search;
+        const shelves = {};
+        const shelfOrder = [];
+        if (isDefaultBrowse) {
+          books.forEach(function(b){
+            const primaryGenre = (b.genres ? b.genres.split(',')[0].trim() : 'More to Explore');
+            if (!shelves[primaryGenre]) { shelves[primaryGenre] = []; shelfOrder.push(primaryGenre); }
+            shelves[primaryGenre].push(b);
+          });
+        } else {
+          shelves['Results'] = books;
+          shelfOrder.push('Results');
+        }
+      %>
+      <% shelfOrder.forEach(function(genreName, idx){ %>
+        <% if (isDefaultBrowse && shelfOrder.length > 1) { %>
+          <div class="shelf-divider" style="<%= idx === 0 ? 'margin-top:0;' : '' %>"><%= genreName %></div>
+        <% } %>
+        <div class="shelf-row">
+          <% shelves[genreName].forEach(function(book){ %>
+            <%- include('partials/book-card', { book }) %>
+          <% }) %>
+        </div>
+      <% }) %>
+    <% } %>
+
+    <% if (pagination.pages > 1) { %>
+      <div class="pagination">
+        <% for (let p = 1; p <= pagination.pages; p++) { %>
+          <% if (p === pagination.page) { %>
+            <span class="current"><%= p %></span>
+          <% } else { %>
+            <a href="/catalogue?search=<%= encodeURIComponent(filters.search) %>&genre=<%= filters.genre %>&author=<%= filters.author %>&minPrice=<%= filters.minPrice %>&maxPrice=<%= filters.maxPrice %>&inStockOnly=<%= filters.inStockOnly %>&sort=<%= filters.sort %>&page=<%= p %>"><%= p %></a>
+          <% } %>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

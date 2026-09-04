@@ -1,0 +1,8 @@
+<div class="admin-tabs">
+  <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">📊 Overview</a>
+  <a href="/admin/books" class="<%= currentPath.startsWith('/admin/books') ? 'active' : '' %>">📚 Manage Books</a>
+  <a href="/admin/authors" class="<%= currentPath.startsWith('/admin/authors') ? 'active' : '' %>">✍️ Authors</a>
+  <a href="/admin/genres" class="<%= currentPath.startsWith('/admin/genres') ? 'active' : '' %>">🏷️ Genres</a>
+  <a href="/admin/orders" class="<%= currentPath === '/admin/orders' ? 'active' : '' %>">🧾 Orders</a>
+  <a href="/catalogue" class="btn-ghost" style="margin-left:auto;">← Back to store</a>
+</div>

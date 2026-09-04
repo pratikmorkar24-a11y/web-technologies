@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="icon-crest">🔐</div>
+    <h1>Welcome back</h1>
+    <p class="sub">Log in to continue building your shelf.</p>
+
+    <form action="/login" method="POST" novalidate>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Log In</button>
+    </form>
+
+    <div class="demo-hint">
+      Demo accounts — Admin: <b>admin@inkwell.com</b> / admin123 &nbsp;|&nbsp; Customer: <b>jane@example.com</b> / password123
+    </div>
+
+    <div class="auth-footer-link">
+      Don't have an account? <a href="/register">Create one</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

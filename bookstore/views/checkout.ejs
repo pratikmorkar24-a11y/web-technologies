@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/flash') %>
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="page-hero-simple">
+    <h1>Checkout</h1>
+    <p>One last step before your books are on their way.</p>
+  </div>
+</div>
+
+<div class="container cart-layout">
+  <div class="auth-card" style="max-width:100%;">
+    <h3 style="margin-bottom:20px;">Shipping Details</h3>
+    <form id="checkoutForm">
+      <div class="form-group">
+        <label for="shippingAddress">Shipping Address</label>
+        <textarea id="shippingAddress" name="shippingAddress" rows="4" placeholder="Street, City, State, PIN code" required><%= user.address || '' %></textarea>
+      </div>
+      <div id="checkoutError" class="flash flash-error" style="display:none; margin-bottom:16px; position:static;"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Place Order</button>
+      <p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-top:14px;">This is a demo checkout — no real payment is processed.</p>
+    </form>
+  </div>
+
+  <div class="summary-card">
+    <h3 style="margin-bottom:20px;">Order Summary</h3>
+    <div id="checkoutSummary"><p class="muted">Loading…</p></div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/checkout-page.js"></script>
+</body>
+</html>

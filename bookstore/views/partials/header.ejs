@@ -1,0 +1,37 @@
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="brand">
+      <span class="brand-mark">✦</span>
+      <span class="brand-name">Ink<em>well</em></span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+      <a href="/catalogue" class="<%= currentPath === '/catalogue' ? 'active' : '' %>">Catalogue</a>
+      <% if (user) { %>
+        <a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'active' : '' %>">Dashboard</a>
+        <% if (user.role === 'admin') { %>
+          <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
+        <% } %>
+      <% } %>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/cart" class="icon-btn cart-btn" aria-label="Cart">
+        🛍️<span class="cart-badge" id="cartBadge">0</span>
+      </a>
+      <% if (user) { %>
+        <span class="hi-user">Hi, <%= user.full_name.split(' ')[0] %></span>
+        <form action="/logout" method="POST" class="inline-form">
+          <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-ghost btn-sm">Login</a>
+        <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
+      <% } %>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
