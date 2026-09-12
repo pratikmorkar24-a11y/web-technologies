@@ -1,0 +1,23 @@
+<svg viewBox="0 0 280 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g99" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="shine99" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="280" height="420" fill="url(#g99)"/>
+  <rect width="280" height="420" fill="url(#shine99)"/>
+  <rect x="0" y="0" width="10" height="420" fill="#000" opacity="0.18"/>
+  <circle cx="240" cy="60" r="70" fill="#ffffff" opacity="0.06"/>
+  <circle cx="40" cy="360" r="90" fill="#000000" opacity="0.10"/>
+  <rect x="24" y="24" width="232" height="372" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text font-family="Georgia, serif" font-size="24" font-weight="700" fill="#ffffff" text-anchor="middle" opacity="0.96">
+    <tspan x="140" y="183">Inkwell</tspan><tspan x="140" y="217">Library</tspan>
+  </text>
+  <text x="140" y="370" font-family="Georgia, serif" font-size="14" fill="#ffffff" text-anchor="middle" opacity="0.85">Digital Bookstore</text>
+  <text x="140" y="60" font-family="Georgia, serif" font-size="13" letter-spacing="4" fill="#ffffff" text-anchor="middle" opacity="0.6">INKWELL</text>
+</svg>
