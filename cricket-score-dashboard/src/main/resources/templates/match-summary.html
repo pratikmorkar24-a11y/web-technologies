@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${match.team1ShortName + ' vs ' + match.team2ShortName + ' - Scorecard & Summary | CricScore'}">Match Summary - CricScore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">
+                <span class="ball-icon">🏏</span>
+                <span>Cric<span class="accent">Score</span></span>
+            </a>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a th:href="@{/}" class="btn btn-outline btn-sm">&larr; Dashboard</a>
+                <a th:href="@{/matches/{id}(id=${match.id})}" class="btn btn-secondary btn-sm">Live Score</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- Top Navigation & Action -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div>
+                <a th:href="@{/matches/{id}(id=${match.id})}" class="btn btn-outline btn-sm" style="margin-bottom: 0.5rem;">
+                    &larr; Back to Live Center
+                </a>
+                <h1 style="font-size: 1.6rem; font-weight: 800;">
+                    <span th:text="${match.team1Name + ' vs ' + match.team2Name}">India vs England</span> - Match Scorecard
+                </h1>
+            </div>
+        </div>
+
+        <!-- Match Summary Hero Card -->
+        <section class="summary-hero">
+            <div class="summary-result-badge" th:text="${summary.resultDescription != null ? summary.resultDescription : (match.status.name() + ' - Match in Progress')}">
+                India won by 24 runs
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                <span th:if="${summary.playerOfMatchName != null}" class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--accent-gold); border: 1px solid rgba(251, 191, 36, 0.3);">
+                    ★ Player of the Match: <strong th:text="${summary.playerOfMatchName}">Jasprit Bumrah</strong>
+                </span>
+                <span class="badge badge-completed" th:text="${summary.format}">T20I</span>
+            </div>
+
+            <div class="summary-meta-grid">
+                <div class="meta-item">
+                    <strong>Match Date</strong>
+                    <span th:text="${summary.matchDate != null ? #temporals.format(summary.matchDate, 'dd MMMM yyyy, hh:mm a') : 'Scheduled'}">Date</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Venue</strong>
+                    <span th:text="${summary.venue}">Wankhede Stadium, Mumbai</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Toss</strong>
+                    <span th:text="${summary.tossInfo != null ? summary.tossInfo : 'Toss yet to happen'}">Toss info</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Winner</strong>
+                    <span th:text="${summary.winnerName != null ? summary.winnerName : 'Match In Progress'}" style="color: var(--primary); font-weight: 700;">Winner</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Innings Scorecards -->
+        <div th:each="inn : ${scorecard.inningsList}">
+            
+            <!-- Innings Header -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; margin-top: 2rem;">
+                <h2 style="font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
+                    <span th:text="${inn.battingTeamName + ' Innings'}">Team Innings</span>
+                    <span style="font-size: 1rem; color: var(--primary);" th:text="${'(' + inn.runs + '/' + inn.wickets + ' in ' + inn.overs + ' Ov)'}">198/5</span>
+                </h2>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                    <span th:text="${'Run Rate: ' + inn.runRate}">RR: 9.90</span>
+                    <span th:if="${inn.target != null}" th:text="${' &bull; Target: ' + inn.target}">Target: 199</span>
+                </div>
+            </div>
+
+            <!-- Batting Card -->
+            <div class="table-card">
+                <div class="table-header-title">
+                    <span>Batting Scorecard</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);" th:text="${inn.battingTeamShortName}">IND</span>
+                </div>
+                <table class="cricket-table">
+                    <thead>
+                        <tr>
+                            <th>Batter</th>
+                            <th>Dismissal</th>
+                            <th>R</th>
+                            <th>B</th>
+                            <th>4s</th>
+                            <th>6s</th>
+                            <th>SR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="b : ${inn.batsmen}">
+                            <td>
+                                <strong th:text="${b.playerName}">Rohit Sharma</strong>
+                                <span th:if="${b.onStrike}" class="strike-indicator">*</span>
+                            </td>
+                            <td style="text-align: left; font-size: 0.8rem; color: var(--text-muted);" th:text="${b.dismissalInfo}">c Buttler b Archer</td>
+                            <td><strong style="color: #ffffff;" th:text="${b.runs}">57</strong></td>
+                            <td th:text="${b.balls}">32</td>
+                            <td th:text="${b.fours}">7</td>
+                            <td th:text="${b.sixes}">3</td>
+                            <td th:text="${#numbers.formatDecimal(b.strikeRate, 1, 2)}">178.12</td>
+                        </tr>
+                        <!-- Extras & Total rows -->
+                        <tr style="background-color: rgba(255, 255, 255, 0.02); font-weight: 600;">
+                            <td colspan="2">Extras</td>
+                            <td colspan="5" style="text-align: right;" th:text="${inn.extras}">12</td>
+                        </tr>
+                        <tr style="background-color: rgba(16, 185, 129, 0.08); font-weight: 800; font-size: 0.95rem;">
+                            <td colspan="2" style="color: var(--primary);">Total</td>
+                            <td colspan="5" style="text-align: right; color: #ffffff;" th:text="${inn.runs + '/' + inn.wickets + ' (' + inn.overs + ' Overs, RR: ' + inn.runRate + ')'}">198/5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bowling Card -->
+            <div class="table-card">
+                <div class="table-header-title">
+                    <span>Bowling Scorecard</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);" th:text="${inn.bowlingTeamShortName}">ENG</span>
+                </div>
+                <table class="cricket-table">
+                    <thead>
+                        <tr>
+                            <th>Bowler</th>
+                            <th>O</th>
+                            <th>M</th>
+                            <th>R</th>
+                            <th>W</th>
+                            <th>ECO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bowl : ${inn.bowlers}">
+                            <td><strong th:text="${bowl.playerName}">Jofra Archer</strong></td>
+                            <td th:text="${bowl.overs}">4.0</td>
+                            <td th:text="${bowl.maidens}">0</td>
+                            <td th:text="${bowl.runsConceded}">38</td>
+                            <td><strong style="color: #ffffff;" th:text="${bowl.wickets}">2</strong></td>
+                            <td th:text="${#numbers.formatDecimal(bowl.economyRate, 1, 2)}">9.50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- If no scorecard available yet -->
+        <div th:if="${scorecard.inningsList.isEmpty()}" class="card" style="text-align: center; padding: 3rem;">
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Scorecard will be updated once the match begins.</p>
+            <a th:href="@{/}" class="btn btn-primary" style="margin-top: 1rem;">Back to Dashboard</a>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>CricScore &copy; 2026 - College Project Live Cricket Scoring Dashboard</p>
+    </footer>
+
+</body>
+</html>

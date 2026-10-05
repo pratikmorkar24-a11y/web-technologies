@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${match.team1ShortName + ' vs ' + match.team2ShortName + ' - Live Score | CricScore'}">Live Cricket Score - CricScore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">
+                <span class="ball-icon">🏏</span>
+                <span>Cric<span class="accent">Score</span></span>
+            </a>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a th:href="@{/}" class="btn btn-outline btn-sm">&larr; Dashboard</a>
+                <a th:href="@{/matches/{id}/summary(id=${match.id})}" class="btn btn-secondary btn-sm">Scorecard &rarr;</a>
+                <span class="refresh-pill">
+                    <span class="refresh-dot"></span> Live Polling (2.5s)
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- Match Title & Status Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <h1 style="font-size: 1.7rem; font-weight: 800; display: flex; align-items: center; gap: 0.75rem;">
+                    <span th:text="${match.team1Name + ' vs ' + match.team2Name}">India vs Australia</span>
+                    <span th:if="${match.status.name() == 'LIVE'}" class="badge badge-live">
+                        <span class="pulse-dot"></span> LIVE
+                    </span>
+                    <span th:if="${match.status.name() == 'COMPLETED'}" class="badge badge-completed">
+                        COMPLETED
+                    </span>
+                    <span th:if="${match.status.name() == 'UPCOMING'}" class="badge badge-upcoming">
+                        UPCOMING
+                    </span>
+                </h1>
+                <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">
+                    <span th:text="${match.format}">T20I</span> &bull; 
+                    <span th:text="${match.venue}">Stadium</span> &bull; 
+                    <span th:text="${match.totalOvers + ' Overs per side'}">20 Overs</span>
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/matches/{id}/summary(id=${match.id})}" class="btn btn-primary btn-sm">
+                    View Full Scorecard &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Live Scoreboard Hero -->
+        <section class="scoreboard-hero">
+            <div class="scoreboard-top">
+                <div style="font-weight: 700; color: var(--accent-blue); font-size: 1.1rem;">
+                    <span id="liveBattingTeam" th:text="${liveScore.battingTeamName != null ? liveScore.battingTeamName : match.team1Name}">India</span> Batting
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);" th:if="${match.tossWinnerName != null}">
+                    <span th:text="${match.tossWinnerName + ' chose to ' + (match.tossDecision != null ? match.tossDecision.toLowerCase() : 'bat')}">Toss details</span>
+                </div>
+            </div>
+
+            <div class="score-display-row">
+                <div>
+                    <span class="score-big">
+                        <span id="liveRuns" th:text="${liveScore.runs}">158</span>/<span id="liveWickets" th:text="${liveScore.wickets}">3</span>
+                    </span>
+                    <span class="score-overs-big">
+                        (<span id="liveOvers" th:text="${liveScore.overs}">16.4</span> ov)
+                    </span>
+                </div>
+
+                <div class="rates-cluster">
+                    <div class="rate-item">
+                        <span class="rate-label">CRR</span>
+                        <span class="rate-value" id="liveRunRate" th:text="${#numbers.formatDecimal(liveScore.runRate, 1, 2)}">9.48</span>
+                    </div>
+
+                    <div class="rate-item" id="chaseStatsWrap" th:style="${liveScore.target != null and liveScore.target > 0} ? 'display: flex;' : 'display: none;'">
+                        <span class="rate-label">REQ RR</span>
+                        <span class="rate-value" id="liveReqRate" style="color: var(--accent-gold);" th:text="${liveScore.requiredRunRate != null ? #numbers.formatDecimal(liveScore.requiredRunRate, 1, 2) : '--'}">8.40</span>
+                    </div>
+
+                    <div class="rate-item" th:if="${liveScore.target != null and liveScore.target > 0}">
+                        <span class="rate-label">Target</span>
+                        <span class="rate-value" id="liveTarget" style="color: #ffffff;" th:text="${liveScore.target}">186</span>
+                    </div>
+
+                    <div class="rate-item" th:if="${liveScore.runsNeeded != null}">
+                        <span class="rate-label">Need</span>
+                        <span class="rate-value" id="liveRunsNeeded" style="color: var(--accent-blue);" th:text="${liveScore.runsNeeded}">28</span>
+                    </div>
+
+                    <div class="rate-item" th:if="${liveScore.ballsRemaining != null}">
+                        <span class="rate-label">Balls Left</span>
+                        <span class="rate-value" id="liveBallsLeft" style="color: #ffffff;" th:text="${liveScore.ballsRemaining}">20</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Situation Alert Banner -->
+            <div class="situation-banner">
+                <span>⚡</span>
+                <span id="liveSituation" th:text="${liveScore.matchSituation}">India need 28 runs in 20 balls</span>
+            </div>
+        </section>
+
+        <!-- Current Over Strip -->
+        <section class="over-strip-container">
+            <span class="over-strip-title">This Over:</span>
+            <div class="balls-wrap" id="currentOverBallsWrap">
+                <span th:each="ball : ${liveScore.currentOverBalls}"
+                      th:text="${ball}"
+                      th:class="${'ball-circle ' + (ball == '0' ? 'ball-0' : (ball == '4' ? 'ball-4' : (ball == '6' ? 'ball-6' : (ball.contains('W') ? 'ball-w' : 'ball-1'))))}">
+                    1
+                </span>
+                <span th:if="${liveScore.currentOverBalls.isEmpty()}" style="color: var(--text-muted); font-size: 0.85rem;">
+                    Over starting...
+                </span>
+            </div>
+        </section>
+
+        <!-- Current Batsmen Table -->
+        <section class="table-card">
+            <div class="table-header-title">
+                <span>Batter</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">* On strike</span>
+            </div>
+            <table class="cricket-table">
+                <thead>
+                    <tr>
+                        <th>Batter</th>
+                        <th>R</th>
+                        <th>B</th>
+                        <th>4s</th>
+                        <th>6s</th>
+                        <th>SR</th>
+                    </tr>
+                </thead>
+                <tbody id="batsmenTableBody">
+                    <tr th:if="${liveScore.striker != null}">
+                        <td>
+                            <strong th:text="${liveScore.striker.playerName}">Virat Kohli</strong>
+                            <span class="strike-indicator">*</span>
+                            <div class="dismissal-text" th:text="${liveScore.striker.dismissalInfo}">not out</div>
+                        </td>
+                        <td><strong style="color: #ffffff;" th:text="${liveScore.striker.runs}">64</strong></td>
+                        <td th:text="${liveScore.striker.balls}">42</td>
+                        <td th:text="${liveScore.striker.fours}">6</td>
+                        <td th:text="${liveScore.striker.sixes}">2</td>
+                        <td th:text="${#numbers.formatDecimal(liveScore.striker.strikeRate, 1, 2)}">152.38</td>
+                    </tr>
+                    <tr th:if="${liveScore.nonStriker != null}">
+                        <td>
+                            <strong th:text="${liveScore.nonStriker.playerName}">Hardik Pandya</strong>
+                            <div class="dismissal-text" th:text="${liveScore.nonStriker.dismissalInfo}">not out</div>
+                        </td>
+                        <td><strong style="color: #ffffff;" th:text="${liveScore.nonStriker.runs}">17</strong></td>
+                        <td th:text="${liveScore.nonStriker.balls}">10</td>
+                        <td th:text="${liveScore.nonStriker.fours}">1</td>
+                        <td th:text="${liveScore.nonStriker.sixes}">1</td>
+                        <td th:text="${#numbers.formatDecimal(liveScore.nonStriker.strikeRate, 1, 2)}">170.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Current Bowler Table -->
+        <section class="table-card">
+            <div class="table-header-title">
+                <span>Bowler</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Current Spell</span>
+            </div>
+            <table class="cricket-table">
+                <thead>
+                    <tr>
+                        <th>Bowler</th>
+                        <th>O</th>
+                        <th>M</th>
+                        <th>R</th>
+                        <th>W</th>
+                        <th>ECO</th>
+                    </tr>
+                </thead>
+                <tbody id="bowlerTableBody">
+                    <tr th:if="${liveScore.currentBowler != null}">
+                        <td>
+                            <strong th:text="${liveScore.currentBowler.playerName}">Pat Cummins</strong>
+                            <span class="strike-indicator">*</span>
+                        </td>
+                        <td th:text="${liveScore.currentBowler.overs}">3.4</td>
+                        <td th:text="${liveScore.currentBowler.maidens}">0</td>
+                        <td th:text="${liveScore.currentBowler.runsConceded}">28</td>
+                        <td><strong style="color: #ffffff;" th:text="${liveScore.currentBowler.wickets}">0</strong></td>
+                        <td th:text="${#numbers.formatDecimal(liveScore.currentBowler.economyRate, 1, 2)}">7.64</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- College Demo Feature: Live Ball Simulator / Event Poster -->
+        <section class="simulation-card" th:if="${match.status.name() != 'COMPLETED'}">
+            <div class="sim-header">
+                <div>
+                    <strong style="font-size: 0.95rem; color: var(--accent-blue);">🧪 College Demo Console: Simulate Live Ball</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        Trigger POST /api/matches/{id}/events to watch dynamic real-time scoring and strike rotation!
+                    </div>
+                </div>
+                <div id="simFeedback" style="font-size: 0.8rem; color: var(--accent-gold); transition: opacity 0.3s;"></div>
+            </div>
+
+            <div class="sim-buttons">
+                <button class="sim-btn btn-dot" th:onclick="'simulateEvent(' + ${match.id} + ', \'DOT_BALL\', 0)'">0 (Dot)</button>
+                <button class="sim-btn btn-1" th:onclick="'simulateEvent(' + ${match.id} + ', \'RUN\', 1)'">+1 Single</button>
+                <button class="sim-btn btn-2" th:onclick="'simulateEvent(' + ${match.id} + ', \'RUN\', 2)'">+2 Double</button>
+                <button class="sim-btn btn-4" th:onclick="'simulateEvent(' + ${match.id} + ', \'FOUR\', 4)'">+4 Four!</button>
+                <button class="sim-btn btn-6" th:onclick="'simulateEvent(' + ${match.id} + ', \'SIX\', 6)'">+6 Six!</button>
+                <button class="sim-btn btn-wd" th:onclick="'simulateEvent(' + ${match.id} + ', \'WIDE\', 0)'">+1 Wd (Wide)</button>
+                <button class="sim-btn btn-w" th:onclick="'simulateEvent(' + ${match.id} + ', \'WICKET\', 0)'">W (Wicket!)</button>
+            </div>
+        </section>
+
+        <!-- Recent Commentary & Ball-by-Ball Timeline -->
+        <section class="table-card">
+            <div class="table-header-title">
+                <span>Recent Ball-by-Ball Events</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Latest Deliveries</span>
+            </div>
+            <div style="padding: 1rem;">
+                <div class="commentary-list" id="recentEventsList">
+                    <div th:each="e : ${liveScore.recentEvents}"
+                         th:class="${'commentary-item ' + (e.eventType.name() == 'WICKET' ? 'wicket' : (e.eventType.name() == 'FOUR' ? 'boundary' : (e.eventType.name() == 'SIX' ? 'six' : '')))}">
+                        <div class="commentary-ball">
+                            <span th:text="${e.eventBadge}"
+                                  th:class="${'ball-circle ' + (e.eventBadge == '0' ? 'ball-0' : (e.eventBadge == '4' ? 'ball-4' : (e.eventBadge == '6' ? 'ball-6' : (e.eventBadge.contains('W') ? 'ball-w' : 'ball-1'))))}"
+                                  style="width: 28px; height: 28px; font-size: 0.75rem;">
+                                1
+                            </span>
+                        </div>
+                        <div class="commentary-content">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px;" th:text="${'Over ' + e.ballDisplay}">Over 16.4</div>
+                            <div class="commentary-text" th:text="${e.description}">Description of ball</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>CricScore &copy; 2026 - College Project Live Cricket Scoring Dashboard</p>
+    </footer>
+
+    <script th:src="@{/js/live-score.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const matchId = /*[[${match.id}]]*/ 1;
+        document.addEventListener("DOMContentLoaded", function() {
+            initLiveScorePolling(matchId);
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

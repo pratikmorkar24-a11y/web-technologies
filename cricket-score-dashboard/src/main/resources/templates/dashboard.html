@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CricScore - Live Cricket Score Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">
+                <span class="ball-icon">🏏</span>
+                <span>Cric<span class="accent">Score</span></span>
+            </a>
+            <nav class="nav-links">
+                <a th:href="@{/}" class="nav-link active">Dashboard</a>
+                <span class="refresh-pill">
+                    <span class="refresh-dot"></span> Live Hub
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Hero Section for Featured LIVE Match (if available) -->
+        <div th:if="${!liveMatches.isEmpty()}" th:with="live=${liveMatches[0]}" class="live-hero-card">
+            <div class="hero-header">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="badge badge-live">
+                        <span class="pulse-dot"></span> LIVE MATCH
+                    </span>
+                    <span style="color: var(--text-muted); font-size: 0.85rem;" th:text="${live.format + ' • ' + live.venue}">T20I • Venue</span>
+                </div>
+                <a th:href="@{/matches/{id}(id=${live.id})}" class="btn btn-primary btn-sm">
+                    Enter Live Center &rarr;
+                </a>
+            </div>
+
+            <div class="hero-content">
+                <div class="hero-score-area">
+                    <div class="hero-team-row">
+                        <span class="hero-team-name" th:text="${live.team1Name}">Team 1</span>
+                        <span class="hero-score-val" th:text="${live.team1Score != null ? live.team1Score : 'Yet to bat'}">Score 1</span>
+                    </div>
+                    <div class="hero-team-row">
+                        <span class="hero-team-name" th:text="${live.team2Name}">Team 2</span>
+                        <span class="hero-score-val" style="color: var(--primary);" th:text="${live.team2Score != null ? live.team2Score : 'Yet to bat'}">Score 2</span>
+                    </div>
+                    <div class="hero-rates-bar" th:if="${live.currentRunRate != null}">
+                        <span>Current Run Rate: <span class="rate-badge" th:text="${live.currentRunRate}">0.00</span></span>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; justify-content: center;">
+                    <div class="match-status-text" style="margin-bottom: 0; width: 100%;" th:text="${live.statusText}">
+                        Match situation description
+                    </div>
+                    <div style="display: flex; gap: 0.6rem; width: 100%;">
+                        <a th:href="@{/matches/{id}(id=${live.id})}" class="btn btn-primary" style="flex: 1;">
+                            Ball by Ball
+                        </a>
+                        <a th:href="@{/matches/{id}/summary(id=${live.id})}" class="btn btn-outline" style="flex: 1;">
+                            Scorecard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="filterMatches('all', this)">All Matches (<span th:text="${allMatches.size()}">3</span>)</button>
+            <button class="tab-btn" onclick="filterMatches('LIVE', this)">Live (<span th:text="${liveMatches.size()}">1</span>)</button>
+            <button class="tab-btn" onclick="filterMatches('UPCOMING', this)">Upcoming (<span th:text="${upcomingMatches.size()}">1</span>)</button>
+            <button class="tab-btn" onclick="filterMatches('COMPLETED', this)">Completed (<span th:text="${completedMatches.size()}">1</span>)</button>
+        </div>
+
+        <!-- Matches Cards Grid -->
+        <div class="matches-grid">
+            <div th:each="m : ${allMatches}" class="card match-card" th:attr="data-status=${m.status}">
+                <div>
+                    <div class="match-card-header">
+                        <span th:if="${m.status.name() == 'LIVE'}" class="badge badge-live">
+                            <span class="pulse-dot"></span> LIVE
+                        </span>
+                        <span th:if="${m.status.name() == 'UPCOMING'}" class="badge badge-upcoming">
+                            UPCOMING
+                        </span>
+                        <span th:if="${m.status.name() == 'COMPLETED'}" class="badge badge-completed">
+                            COMPLETED
+                        </span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);" th:text="${m.format}">T20I</span>
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;" th:text="${m.venue}">
+                        Venue Name
+                    </div>
+
+                    <div class="match-card-teams">
+                        <div class="team-row">
+                            <div class="team-name-group">
+                                <span class="team-flag" th:text="${m.team1ShortName}">T1</span>
+                                <span th:text="${m.team1Name}">Team 1</span>
+                            </div>
+                            <div class="team-score" th:text="${m.team1Score != null ? m.team1Score : '-'}">
+                                -
+                            </div>
+                        </div>
+
+                        <div class="team-row">
+                            <div class="team-name-group">
+                                <span class="team-flag" th:text="${m.team2ShortName}">T2</span>
+                                <span th:text="${m.team2Name}">Team 2</span>
+                            </div>
+                            <div class="team-score" th:text="${m.team2Score != null ? m.team2Score : '-'}">
+                                -
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="match-status-text" th:text="${m.statusText != null ? m.statusText : 'Match scheduled'}">
+                        Status info
+                    </div>
+                </div>
+
+                <div class="match-card-footer">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                        <span th:if="${m.currentRunRate != null}" th:text="${'CRR: ' + m.currentRunRate}">CRR</span>
+                        <span th:if="${m.currentRunRate == null}" th:text="${m.format + ' • ' + m.totalOvers + ' Overs'}">Overs</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a th:href="@{/matches/{id}(id=${m.id})}" class="btn btn-primary btn-sm">
+                            View Match
+                        </a>
+                        <a th:href="@{/matches/{id}/summary(id=${m.id})}" class="btn btn-outline btn-sm">
+                            Scorecard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>CricScore &copy; 2026 - College Project Live Cricket Scoring Dashboard</p>
+    </footer>
+
+    <script>
+        function filterMatches(status, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.match-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.getAttribute('data-status') === status) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
